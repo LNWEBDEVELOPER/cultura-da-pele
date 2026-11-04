@@ -1,19 +1,19 @@
-# Configuração do acesso ao estúdio
+# Cultura da Pele — configuração do estúdio
 
-## O que o fluxo faz
+## O que já está configurado
 
-- O artista solicita acesso com e-mail e senha. O Supabase guarda a senha; ela nunca é encaminhada por e-mail.
-- O artista confirma o endereço pelo e-mail de autenticação.
-- O proprietário recebe um aviso de novo pedido, entra na área do estúdio e aprova ou recusa.
-- Somente contas aprovadas podem publicar trabalhos e imagens. A galeria é compartilhada para todos os visitantes.
+- Organização Supabase: **Art of Tatto**.
+- Projeto: **Art of Tatto**, em São Paulo (`tfftyjxvcqwicxnzjpng`).
+- Banco: schema e políticas de acesso aplicados; tabelas `profiles` e `tattoos` aparecem no Table Editor.
+- Site: publicado em https://lnwebdeveloper.github.io/cultura-da-pele/ e conectado ao projeto.
+- Confirmação de e-mail e URL de redirecionamento estão ativadas.
+- Função `notify-owner` publicada; os secrets `OWNER_EMAIL` e `SITE_URL` já estão configurados.
+- A organização antiga **Martins Barbearia** foi renomeada para **lnwebdeveloper**.
 
-## Configuração inicial
+## Próximos passos para o proprietário
 
-1. Projeto criado: Art of Tatto (`tfftyjxvcqwicxnzjpng`, região São Paulo).
-2. O esquema `supabase/schema.sql` já foi aplicado; as tabelas `profiles` e `tattoos` foram conferidas no Table Editor.
-3. O site já está publicado no GitHub Pages. A URL principal e o redirecionamento de autenticação estão configurados, e a confirmação de e-mail está ativada.
-4. Registre a conta do proprietário usando a área **Área do estúdio** no próprio site e confirme o e-mail.
-5. No SQL Editor, promova essa conta. Troque o e-mail pelo seu:
+1. No site, abra **Área do estúdio**, cadastre `lnwebdeveloperads@gmail.com` com uma senha e confirme o e-mail. A senha fica no Supabase Auth e nunca é enviada por e-mail.
+2. Depois da confirmação, execute uma vez no SQL Editor para promover essa conta:
 
    ```sql
    update public.profiles
@@ -21,17 +21,21 @@
    where email=lower('lnwebdeveloperads@gmail.com');
    ```
 
-6. A URL e a chave publicável do projeto já estão configuradas em `dist/index.html`. A chave `sb_publishable_...` é destinada ao navegador; as políticas RLS protegem os dados. Nunca coloque uma chave secreta no HTML.
-7. A função `notify-owner` já está publicada, e `OWNER_EMAIL` e `SITE_URL` já estão guardados nos secrets do Supabase. Para ativar o envio, verifique um domínio no Resend e adicione `RESEND_API_KEY` e `NOTIFICATION_FROM_EMAIL` em **Edge Functions → Secrets**. Não coloque a chave no GitHub. Secrets passam a valer imediatamente, sem novo deploy.
+3. Para habilitar os avisos automáticos dos novos pedidos, verifique um domínio remetente no Resend e adicione `RESEND_API_KEY` e `NOTIFICATION_FROM_EMAIL` em **Edge Functions → Secrets**. Não coloque a chave no GitHub. Os secrets passam a valer sem novo deploy.
+4. Para que os e-mails de confirmação de cadastro cheguem com confiabilidade, configure SMTP próprio em **Authentication → Emails**.
 
+## Como funciona
 
+- O visitante clica em **Tenho interesse** para abrir o orçamento com aquela tatuagem como referência.
+- O artista pode pedir acesso com e-mail e senha. Depois de confirmar o e-mail e receber aprovação, consegue adicionar trabalhos à galeria.
+- O proprietário aprova ou recusa pedidos pela área do estúdio.
+- A galeria atual inclui três estudos visuais conceituais como exemplos.
 
-   A função usa `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` do ambiente de funções Supabase. A função exige sessão autenticada e e-mail já confirmado. O aviso segue para o proprietário uma vez por pedido pendente; a senha nunca sai do Supabase Auth.
-8. O site já está publicado no GitHub Pages. O ZIP da entrega inclui os arquivos publicados e a pasta `supabase` com o schema e a função.
+## Arquivos
 
-## Observações
+- `dist/index.html`: site publicado, conectado à chave publicável do Supabase.
+- `supabase/schema.sql`: tabelas, políticas RLS, bucket de imagens e exemplos iniciais.
+- `supabase/functions/notify-owner/index.ts`: aviso de novos pedidos ao proprietário.
 
-- Os três estudos visuais atuais são incluídos como exemplos no schema.
-- O primeiro cadastro proprietário deve ser promovido manualmente no SQL; depois disso, as aprovações ocorrem na própria página.
-- Configure SMTP próprio em **Authentication → SMTP Settings** para que os e-mails de confirmação cheguem de forma confiável.
+A chave publicável pode aparecer no navegador. Chaves secretas do Supabase e do Resend devem permanecer nos secrets do projeto, nunca no HTML ou no GitHub.
 
