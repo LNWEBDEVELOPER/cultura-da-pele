@@ -4,25 +4,17 @@
 
 - Organização Supabase: **Art of Tatto**.
 - Projeto: **Art of Tatto**, em São Paulo (`tfftyjxvcqwicxnzjpng`).
-- Banco: schema e políticas de acesso aplicados; tabelas `profiles` e `tattoos` aparecem no Table Editor.
+- Banco: schema e políticas de acesso aplicados; tabelas `profiles`, `tattoos` e `appointments` aparecem no Table Editor.
 - Site: publicado em https://lnwebdeveloper.github.io/cultura-da-pele/ e conectado ao projeto.
 - Confirmação de e-mail e URL de redirecionamento estão ativadas.
 - Função `notify-owner` publicada; os secrets `OWNER_EMAIL` e `SITE_URL` já estão configurados.
 - A organização antiga **Martins Barbearia** foi renomeada para **lnwebdeveloper**.
 
-## Próximos passos para o proprietário
+## Acesso do proprietário
 
-1. No site, abra **Área do estúdio**, cadastre `lnwebdeveloperads@gmail.com` com uma senha e confirme o e-mail. A senha fica no Supabase Auth e nunca é enviada por e-mail.
-2. Depois da confirmação, execute uma vez no SQL Editor para promover essa conta:
+A conta `luannascimentopsp@gmail.com` já está aprovada como proprietária do projeto. Entre pelo formulário da **Área do estúdio**. A agenda é visível somente para essa conta proprietária; ela armazena nome, contato, horário, duração, situação e observações dos atendimentos.
 
-   ```sql
-   update public.profiles
-   set role='owner', approval_status='approved'
-   where email=lower('lnwebdeveloperads@gmail.com');
-   ```
-
-3. Para habilitar os avisos automáticos dos novos pedidos, verifique um domínio remetente no Resend e adicione `RESEND_API_KEY` e `NOTIFICATION_FROM_EMAIL` em **Edge Functions → Secrets**. Não coloque a chave no GitHub. Os secrets passam a valer sem novo deploy.
-4. Para que os e-mails de confirmação de cadastro cheguem com confiabilidade, configure SMTP próprio em **Authentication → Emails**.
+Para habilitar os avisos automáticos de novos pedidos, verifique um domínio remetente no Resend e adicione `RESEND_API_KEY` e `NOTIFICATION_FROM_EMAIL` em **Edge Functions → Secrets**. Para e-mails de confirmação com mais confiabilidade, configure SMTP próprio em **Authentication → Emails**.
 
 ## Como funciona
 
@@ -34,7 +26,8 @@
 ## Arquivos
 
 - `dist/index.html`: site publicado, conectado à chave publicável do Supabase.
-- `supabase/schema.sql`: tabelas, políticas RLS, bucket de imagens e exemplos iniciais.
+- `supabase/schema.sql`: tabelas, políticas RLS, bucket de imagens, exemplos iniciais e SQL da agenda privada.
+- `supabase/appointments.sql`: tabela e políticas RLS da agenda privada.
 - `supabase/functions/notify-owner/index.ts`: aviso de novos pedidos ao proprietário.
 
 A chave publicável pode aparecer no navegador. Chaves secretas do Supabase e do Resend devem permanecer nos secrets do projeto, nunca no HTML ou no GitHub.

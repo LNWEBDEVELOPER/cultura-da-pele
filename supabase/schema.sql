@@ -1,4 +1,4 @@
--- Run once in Supabase SQL Editor. Replace lnwebdeveloperads@gmail.com with your own email.
+-- Run once in Supabase SQL Editor for the Art of Tatto project.
 create extension if not exists pgcrypto;
 create schema if not exists private;
 revoke all on schema private from public;
@@ -89,6 +89,35 @@ revoke all on function private.can_manage_portfolio() from public, anon, authent
 grant execute on function private.is_site_owner() to authenticated;
 grant execute on function private.can_manage_portfolio() to authenticated;
 
+-- Private calendar for the site owner; appointment contact details and notes are never public.
+create table if not exists public.appointments (
+  id uuid primary key default gen_random_uuid(),
+  client_name text not null check (length(btrim(client_name)) between 1 and 120),
+  client_contact text not null default '' check (length(client_contact) <= 80),
+  starts_at timestamptz not null,
+  duration_minutes integer not null default 60 check (duration_minutes between 15 and 480),
+  status text not null default 'scheduled' check (status in ('scheduled','confirmed','completed','cancelled')),
+  notes text not null default '' check (length(notes) <= 4000),
+  created_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+create index if not exists appointments_starts_at_idx on public.appointments (starts_at);
+alter table public.appointments enable row level security;
+revoke all on table public.appointments from public, anon, authenticated;
+grant select, insert, update, delete on table public.appointments to authenticated;
+drop policy if exists "site owner reads appointments" on public.appointments;
+create policy "site owner reads appointments" on public.appointments for select to authenticated
+using (private.is_site_owner());
+drop policy if exists "site owner creates appointments" on public.appointments;
+create policy "site owner creates appointments" on public.appointments for insert to authenticated
+with check (private.is_site_owner() and created_by=auth.uid());
+drop policy if exists "site owner updates appointments" on public.appointments;
+create policy "site owner updates appointments" on public.appointments for update to authenticated
+using (private.is_site_owner()) with check (private.is_site_owner() and created_by=auth.uid());
+drop policy if exists "site owner deletes appointments" on public.appointments;
+create policy "site owner deletes appointments" on public.appointments for delete to authenticated
+using (private.is_site_owner());
+
 -- Public image bucket; uploads are restricted to approved accounts.
 insert into storage.buckets (id,name,public,file_size_limit,allowed_mime_types)
 values ('tattoo-images','tattoo-images',true,8388608,array['image/jpeg','image/png','image/webp'])
@@ -104,7 +133,7 @@ using (bucket_id='tattoo-images' and (owner_id=auth.uid()::text or private.is_si
 
 -- Add the site owner only after that person has registered and confirmed their email.
 -- Run this line after replacing the email with yours:
--- update public.profiles set role='owner', approval_status='approved' where email=lower('lnwebdeveloperads@gmail.com');
+-- update public.profiles set role='owner', approval_status='approved' where email=lower('luannascimentopsp@gmail.com');
 
 -- Seed the three existing conceptual example cards from the current public site.
 insert into public.tattoos(title,style,image_url,image_path,created_by,published)
