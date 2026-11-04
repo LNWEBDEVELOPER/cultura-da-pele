@@ -11,7 +11,7 @@
 
 1. Projeto criado: Art of Tatto (`tfftyjxvcqwicxnzjpng`, região São Paulo).
 2. Abra **SQL Editor** e execute `supabase/schema.sql`.
-3. Publique o site no GitHub Pages e acrescente a URL em **Authentication → URL Configuration → Redirect URLs**. Ative confirmação de e-mail.
+3. O site já está publicado no GitHub Pages. A URL principal e o redirecionamento de autenticação estão configurados, e a confirmação de e-mail está ativada.
 4. Registre a conta do proprietário usando a área **Área do estúdio** no próprio site e confirme o e-mail.
 5. No SQL Editor, promova essa conta. Troque o e-mail pelo seu:
 
@@ -37,5 +37,4 @@
 - Os três estudos visuais atuais são incluídos como exemplos no schema.
 - O primeiro cadastro proprietário deve ser promovido manualmente no SQL; depois disso, as aprovações ocorrem na própria página.
 - Configure SMTP próprio em **Authentication → SMTP Settings** para que os e-mails de confirmação cheguem de forma confiável.
-
 
