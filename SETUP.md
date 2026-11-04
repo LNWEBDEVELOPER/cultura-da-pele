@@ -22,12 +22,9 @@
    ```
 
 6. A URL e a chave publicável do projeto já estão configuradas em `dist/index.html`. A chave `sb_publishable_...` é destinada ao navegador; as políticas RLS protegem os dados. Nunca coloque uma chave secreta no HTML.
-7. **Pendente:** configure um domínio remetente verificado no Resend, salve a chave `RESEND_API_KEY` nos secrets do projeto Supabase e publique a função:
+7. A função `notify-owner` já está publicada, e `OWNER_EMAIL` e `SITE_URL` já estão guardados nos secrets do Supabase. Para ativar o envio, verifique um domínio no Resend e adicione `RESEND_API_KEY` e `NOTIFICATION_FROM_EMAIL` em **Edge Functions → Secrets**. Não coloque a chave no GitHub. Secrets passam a valer imediatamente, sem novo deploy.
 
-   ```sh
-   supabase functions deploy notify-owner
-   supabase secrets set OWNER_EMAIL=lnwebdeveloperads@gmail.com NOTIFICATION_FROM_EMAIL="Cultura da Pele <avisos@seu-dominio.com>" RESEND_API_KEY=re_... SITE_URL=https://lnwebdeveloper.github.io/cultura-da-pele/
-   ```
+
 
    A função usa `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` do ambiente de funções Supabase. A função exige sessão autenticada e e-mail já confirmado. O aviso segue para o proprietário uma vez por pedido pendente; a senha nunca sai do Supabase Auth.
 8. O site já está publicado no GitHub Pages. O ZIP da entrega inclui os arquivos publicados e a pasta `supabase` com o schema e a função.
