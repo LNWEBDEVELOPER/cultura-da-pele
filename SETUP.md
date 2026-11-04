@@ -10,7 +10,7 @@
 ## Configuração inicial
 
 1. Projeto criado: Art of Tatto (`tfftyjxvcqwicxnzjpng`, região São Paulo).
-2. Abra **SQL Editor** e execute `supabase/schema.sql`.
+2. O esquema `supabase/schema.sql` já foi aplicado; as tabelas `profiles` e `tattoos` foram conferidas no Table Editor.
 3. O site já está publicado no GitHub Pages. A URL principal e o redirecionamento de autenticação estão configurados, e a confirmação de e-mail está ativada.
 4. Registre a conta do proprietário usando a área **Área do estúdio** no próprio site e confirme o e-mail.
 5. No SQL Editor, promova essa conta. Troque o e-mail pelo seu:
@@ -22,7 +22,7 @@
    ```
 
 6. A URL e a chave publicável do projeto já estão configuradas em `dist/index.html`. A chave `sb_publishable_...` é destinada ao navegador; as políticas RLS protegem os dados. Nunca coloque uma chave secreta no HTML.
-7. Configure um domínio remetente verificado no Resend. Publique a função:
+7. **Pendente:** configure um domínio remetente verificado no Resend, salve a chave `RESEND_API_KEY` nos secrets do projeto Supabase e publique a função:
 
    ```sh
    supabase functions deploy notify-owner
@@ -30,7 +30,7 @@
    ```
 
    A função usa `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` do ambiente de funções Supabase. A função exige sessão autenticada e e-mail já confirmado. O aviso segue para o proprietário uma vez por pedido pendente; a senha nunca sai do Supabase Auth.
-8. Publique a pasta `dist` no GitHub Pages. O ZIP da entrega inclui os arquivos publicados e a pasta `supabase` com o schema e a função.
+8. O site já está publicado no GitHub Pages. O ZIP da entrega inclui os arquivos publicados e a pasta `supabase` com o schema e a função.
 
 ## Observações
 
